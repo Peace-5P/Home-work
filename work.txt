@@ -1,0 +1,199 @@
+class Mentor:
+    def __init__(self, name, surname):
+        self.name = name
+        self.surname = surname
+        self.courses_attached = []
+
+
+    def __str__(self):
+        pass
+
+
+class Lecturer(Mentor):
+    def __init__(self, name, surname):
+        super().__init__(name, surname)
+        self.grades = {}
+
+
+
+    def average_grade2(self):
+        all_grades = []  # создаем пустой список для хранения оценок
+        for course in self.grades.values():  # проходимся по всем курсам
+            all_grades.extend(course)  # добавляем оценки в список
+        return round(sum(all_grades) / len(all_grades), 2)  # вычисляем среднюю оценку
+
+
+    def __str__(self):
+        return f"Имя: {self.name}\nФамилия: {self.surname}\nСредняя оценка за лекции: {self.average_grade2()}\n"
+
+
+    def __lt__(self, other):
+        if isinstance(other, Lecturer):
+            return self.average_grade2() < other.average_grade2()
+        else:
+            return 'Ошибка'
+
+
+    def __gt__(self, other):
+        if isinstance(other, Lecturer):
+            return self.average_grade2() > other.average_grade2()
+        else:
+            return 'Ошибка'
+
+
+    def __le__(self, other):
+        if isinstance(other, Lecturer):
+            return self.average_grade2() <= other.average_grade2()
+        else:
+            return 'Ошибка'
+
+
+    def __ge__(self, other):
+        if isinstance(other, Lecturer):
+            return self.average_grade2() >= other.average_grade2()
+        else:
+            return 'Ошибка'
+
+
+class Student(Mentor):
+    def __init__(self, name, surname):
+        super().__init__(name, surname)
+        self.finished_courses = []
+        self.courses_in_progress = []
+        self.grades = {}
+
+
+    def rate_lecturer(self, lecturer, course, grade):
+        if isinstance(lecturer, Lecturer) and course in lecturer.courses_attached:
+            if course in lecturer.grades:
+                lecturer.grades[course] += [grade]
+            else:
+                lecturer.grades[course] = [grade]
+        else:
+            return 'Ошибка'
+
+
+    def average_grade(self):
+        all_grades = []
+        for course in list(some_student.grades.values()):
+            all_grades.append(course)
+        return round(sum(all_grades) / len(all_grades), 2)
+
+
+    def __str__(self):
+        return (f"Имя: {self.name} \nФамилия: {self.surname}\n"
+                f"Средняя оценка за домашние задания: {self.average_grade()}\n"
+                f"Курсы в процессе изучения: {', '.join(self.courses_in_progress)}\n"
+                f"Завершенные курсы: {', '.join(self.finished_courses)}\n")
+
+
+    def __lt__(self, other):
+        if isinstance(other, Student):
+            return self.average_grade() < other.average_grade()
+        else:
+            return 'Ошибка'
+
+
+    def __gt__(self, other):
+        if isinstance(other, Student):
+            return self.average_grade() > other.average_grade()
+        else:
+            return 'Ошибка'
+
+
+    def __le__(self, other):
+        if isinstance(other, Student):
+            return self.average_grade() <= other.average_grade()
+        else:
+            return 'Ошибка'
+
+
+    def __ge__(self, other):
+        if isinstance(other, Student):
+            return self.average_grade() >= other.average_grade()
+        else:
+            return 'Ошибка'
+
+
+class Reviewer(Mentor):
+    def __init__(self, name, surname):
+        super().__init__(name, surname)
+
+
+    def rate_hw(self, student, course, grade):
+        if isinstance(student, Student) and course in self.courses_attached and course in student.courses_in_progress:
+            if course in student.grades:
+                student.grades[course] += [grade]
+            else:
+                student.grades[course] = [grade]
+        else:
+            return 'Ошибка'
+
+
+    def __str__(self):
+        return (f"Имя: {self.name}\nФамилия: {self.surname}\n")
+
+
+some_student = Student('Ruoy', 'Eman')
+some_student.courses_in_progress += ['Python']
+some_student.courses_in_progress += ['Git']
+some_student.finished_courses += ['Введение в программирование']
+some_student.grades['Python'] = 9.9
+some_student.grades['Git'] = 9.9
+
+some_student1 = Student('Roma', 'Ivanov')
+some_student1.courses_in_progress += ['Python']
+some_student1.courses_in_progress += ['Git']
+some_student1.finished_courses += ['Введение в программирование']
+some_student1.grades['Python'] = 9
+some_student1.grades['Git'] = 10
+
+
+some_lecturer = Lecturer('Some', 'Buddy')
+some_lecturer.courses_attached += ['Введение в программирование', "Git", "Python"]
+some_student.rate_lecturer(some_lecturer, 'Python', 9.9)
+some_student.rate_lecturer(some_lecturer, 'Git', 9.9)
+
+some_lecturer1 = Lecturer('Nikita', 'Ivanov')
+some_lecturer1.courses_attached += ['Введение в программирование', "Git", "Python"]
+some_student1.rate_lecturer(some_lecturer1, 'Python', 9)
+some_student1.rate_lecturer(some_lecturer1, 'Git', 5)
+
+some_reviewer = Reviewer('Some', 'Buddy')
+some_reviewer1 = Reviewer('Sergei', 'Petrov')
+
+
+def average_grade_all_students(students, course):
+    all_grades = []
+    for student in students:
+        if course in student.courses_in_progress:
+            all_grades.append(student.grades[course])
+    return round(sum(all_grades) / len(all_grades), 2)
+
+
+def average_lecturer_grade(lecturers, course):
+    all_grades = []
+    for lecturer in lecturers:
+        if course in lecturer.courses_attached:
+            all_grades.extend(lecturer.grades[course])
+    return round(sum(all_grades) / len(all_grades), 2)
+
+
+print(average_grade_all_students([some_student, some_student1], 'Git'))
+print(average_lecturer_grade([some_lecturer, some_lecturer1], 'Git'))
+
+print(some_student)
+print(some_reviewer)
+print(some_lecturer)
+
+
+#методы сравнения: __lt__, __gt__, __le__, __ge__
+print(some_student.__lt__(some_student1))
+print(some_student.__gt__(some_student1))
+print(some_student.__le__(some_student1))
+print(some_student.__ge__(some_student1))
+
+print(some_lecturer.__lt__(some_lecturer1))
+print(some_lecturer.__gt__(some_lecturer1))
+print(some_lecturer.__le__(some_lecturer1))
+print(some_lecturer.__ge__(some_lecturer1))
